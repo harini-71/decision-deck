@@ -629,3 +629,152 @@
     align-self: flex-start;
   }
 }
+/* =========================================
+   Criteria
+   ========================================= */
+
+.criteria-page {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.decision-context {
+  margin-top: 18px !important;
+
+  color: #6b6f76 !important;
+
+  font-size: 13px !important;
+}
+
+.criteria-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.criteria-item {
+  padding: 22px;
+
+  border: 1px solid #d8dad8;
+  border-radius: 7px;
+
+  background: #ffffff;
+}
+
+.criterion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 22px;
+}
+
+.criterion-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 30px;
+  height: 30px;
+
+  border: 1px solid #d8dad8;
+  border-radius: 50%;
+
+  color: #626663;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.remove-criterion {
+  border: none;
+  background: transparent;
+
+  color: #777b78;
+
+  font-size: 12px;
+  font-weight: 500;
+
+  cursor: pointer;
+}
+
+.remove-criterion:hover {
+  color: #9a4b42;
+}
+
+.optional {
+  margin-left: 6px;
+
+  color: #969997;
+
+  font-size: 11px;
+  font-weight: 400;
+}
+
+.weight-control {
+  margin-top: 22px;
+}
+
+.weight-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 12px;
+}
+
+.weight-label span {
+  color: #4f5351;
+
+  font-size: 13px;
+}
+
+.weight-label strong {
+  color: #315c72;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.weight-control input[type="range"] {
+  width: 100%;
+
+  accent-color: #315c72;
+
+  cursor: pointer;
+}
+
+.range-labels {
+  display: flex;
+  justify-content: space-between;
+
+  margin-top: 6px;
+
+  color: #969997;
+
+  font-size: 11px;
+}
+
+.criteria-empty {
+  padding: 36px 20px;
+
+  border: 1px dashed #cfd1cf;
+  border-radius: 7px;
+
+  text-align: center;
+}
+
+.criteria-empty p {
+  margin: 0 0 6px;
+
+  color: #4f5351;
+
+  font-size: 14px;
+}
+
+.criteria-empty span {
+  color: #8a8d8b;
+
+  font-size: 13px;
+}
