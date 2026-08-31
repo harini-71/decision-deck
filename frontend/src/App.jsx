@@ -1,11 +1,15 @@
+
 import "./App.css";
 import Navbar from "./components/Navbar";
-import CriteriaPage from "./pages/CriteriaPage";
 import DecisionFlow from "./flows/DecisionFlow";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+} from "react-router-dom";
 
 import DashboardPage from "./pages/DashboardPage";
-import NewDecisionPage from "./pages/NewDecisionPage";
 import DecisionsPage from "./pages/DecisionsPage";
 import TemplatesPage from "./pages/TemplatesPage";
 
@@ -16,14 +20,25 @@ function App() {
 
       <main className="page-content">
         <Routes>
-          <Route path="/" element={<DashboardPage />} />
-          
-          <Route path="/decisions" element={<DecisionsPage />} />
-          <Route path="/templates" element={<TemplatesPage />} />
+
+          {/* Dashboard */}
           <Route
-           path="/decisions/*"
-           element={<DecisionFlow />}
-           />
+            path="/"
+            element={<DashboardPage />}
+          />
+
+          {/* Everything related to decisions */}
+          <Route
+            path="/decisions/*"
+            element={<DecisionFlow />}
+          />
+
+          {/* Templates */}
+          <Route
+            path="/templates"
+            element={<TemplatesPage />}
+          />
+
         </Routes>
       </main>
     </BrowserRouter>
@@ -31,3 +46,4 @@ function App() {
 }
 
 export default App;
+

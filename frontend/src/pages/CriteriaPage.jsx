@@ -231,13 +231,23 @@ function CriteriaPage({ decision, setDecision }) {
           Back
         </button>
 
-        <button
-          type="button"
-          className="primary-button"
-          disabled={!canContinue}
-        >
-          Continue
-        </button>
+       <button
+  type="button"
+  className="primary-button"
+  disabled={!canContinue}
+  onClick={() => {
+    const initialScores = decision.options.map(() => ({}));
+
+    setDecision({
+      ...decision,
+      scores: initialScores,
+    });
+
+    navigate("/decisions/evaluate");
+  }}
+>
+  Continue
+</button>
 
       </div>
 

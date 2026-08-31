@@ -3,40 +3,39 @@ import { useNavigate } from "react-router-dom";
 
 function DecisionSetup({ decision, setDecision }) {
   const navigate = useNavigate();
-  
 
   function updateOption(index, value) {
-  const updatedOptions = [...decision.options];
+    const updatedOptions = [...decision.options];
 
-  updatedOptions[index] = value;
+    updatedOptions[index] = value;
 
-  setDecision({
-    ...decision,
-    options: updatedOptions,
-  });
-}
-
- function addOption() {
-  setDecision({
-    ...decision,
-    options: [...decision.options, ""],
-  });
-}
-
-  function removeOption(index) {
-  if (decision.options.length <= 2) {
-    return;
+    setDecision({
+      ...decision,
+      options: updatedOptions,
+    });
   }
 
-  const updatedOptions = decision.options.filter(
-    (_, optionIndex) => optionIndex !== index
-  );
+  function addOption() {
+    setDecision({
+      ...decision,
+      options: [...decision.options, ""],
+    });
+  }
 
-  setDecision({
-    ...decision,
-    options: updatedOptions,
-  });
-}
+  function removeOption(index) {
+    if (decision.options.length <= 2) {
+      return;
+    }
+
+    const updatedOptions = decision.options.filter(
+      (_, optionIndex) => optionIndex !== index
+    );
+
+    setDecision({
+      ...decision,
+      options: updatedOptions,
+    });
+  }
 
   return (
     <section className="decision-setup">
@@ -66,14 +65,13 @@ function DecisionSetup({ decision, setDecision }) {
             placeholder="e.g. Which laptop should I buy?"
             value={decision.title}
             onChange={(event) =>
-            setDecision({
-            ...decision,
-           title: event.target.value,
-  })
-}
+              setDecision({
+                ...decision,
+                title: event.target.value,
+              })
+            }
           />
         </div>
-
 
         {/* Description */}
 
@@ -87,15 +85,14 @@ function DecisionSetup({ decision, setDecision }) {
             placeholder="Briefly describe what you're trying to decide..."
             value={decision.description}
             onChange={(event) =>
-             setDecision({
-             ...decision,
-            description: event.target.value,
-            })
+              setDecision({
+                ...decision,
+                description: event.target.value,
+              })
             }
             rows="5"
           />
         </div>
-
 
         {/* Options */}
 
@@ -112,13 +109,19 @@ function DecisionSetup({ decision, setDecision }) {
 
           <div className="options-list">
             {decision.options.map((option, index) => (
-              <div className="option-row" key={index}>
+              <div
+                className="option-row"
+                key={index}
+              >
                 <input
                   type="text"
                   placeholder={`Option ${index + 1}`}
                   value={option}
                   onChange={(event) =>
-                    updateOption(index, event.target.value)
+                    updateOption(
+                      index,
+                      event.target.value
+                    )
                   }
                 />
 
@@ -126,7 +129,9 @@ function DecisionSetup({ decision, setDecision }) {
                   <button
                     type="button"
                     className="remove-option"
-                    onClick={() => removeOption(index)}
+                    onClick={() =>
+                      removeOption(index)
+                    }
                   >
                     Remove
                   </button>
@@ -144,24 +149,34 @@ function DecisionSetup({ decision, setDecision }) {
           </button>
         </div>
 
-
         {/* Actions */}
 
         <div className="setup-actions">
-          <button className="secondary-button">
+
+          <button
+            type="button"
+            className="secondary-button"
+            onClick={() => navigate("/decisions")}
+          >
             Cancel
           </button>
 
           <button
-  className="primary-button"
-  disabled={
-    !decision.title.trim() ||
-    decision.options.some((option) => !option.trim())
-  }
-  onClick={() => navigate("/decisions/criteria")}
->
-  Continue
-</button>
+            type="button"
+            className="primary-button"
+            disabled={
+              !decision.title.trim() ||
+              decision.options.some(
+                (option) => !option.trim()
+              )
+            }
+            onClick={() =>
+              navigate("/decisions/criteria")
+            }
+          >
+            Continue
+          </button>
+
         </div>
 
       </div>

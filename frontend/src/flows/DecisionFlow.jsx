@@ -1,21 +1,60 @@
-import { useState } from "react";
-import { Routes, Route } from "react-router-dom";
 
+import { useState } from "react";
+import {
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
+
+import EvaluationPage from "../pages/EvaluationPage";
 import DecisionSetup from "../components/DecisionSetup";
 import CriteriaPage from "../pages/CriteriaPage";
+import ResultsPage from "../pages/ResultsPage";
+import DecisionsPage from "../pages/DecisionsPage";
+import DecisionDetailsPage from "../pages/DecisionDetailsPage";
 
 function DecisionFlow() {
-  const [decision, setDecision] = useState({
-    title: "",
-    description: "",
-    options: ["", ""],
-    criteria: [],
+  const location = useLocation();
+
+  const template = location.state?.template;
+
+  const [decision, setDecision] = useState(() => {
+    if (template) {
+      return {
+        title: template.title,
+        description: template.description,
+        options: template.options,
+        criteria: template.criteria.map(
+          (criterion) => ({
+            name: criterion,
+            weight: 5,
+          })
+        ),
+        scores: [],
+      };
+    }
+
+    return {
+      title: "",
+      description: "",
+      options: ["", ""],
+      criteria: [],
+      scores: [],
+    };
   });
 
   return (
     <Routes>
+
+      {/* /decisions */}
       <Route
-        path="/new"
+        index
+        element={<DecisionsPage />}
+      />
+
+      {/* /decisions/new */}
+      <Route
+        path="new"
         element={
           <DecisionSetup
             decision={decision}
@@ -24,8 +63,9 @@ function DecisionFlow() {
         }
       />
 
+      {/* /decisions/criteria */}
       <Route
-        path="/criteria"
+        path="criteria"
         element={
           <CriteriaPage
             decision={decision}
@@ -33,8 +73,37 @@ function DecisionFlow() {
           />
         }
       />
+
+      {/* /decisions/evaluate */}
+      <Route
+        path="evaluate"
+        element={
+          <EvaluationPage
+            decision={decision}
+            setDecision={setDecision}
+          />
+        }
+      />
+
+      {/* /decisions/results */}
+      <Route
+        path="results"
+        element={
+          <ResultsPage
+            decision={decision}
+          />
+        }
+      />
+
+      {/* /decisions/:id */}
+      <Route
+        path=":id"
+        element={<DecisionDetailsPage />}
+      />
+
     </Routes>
   );
 }
 
 export default DecisionFlow;
+
