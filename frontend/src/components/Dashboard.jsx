@@ -1,4 +1,7 @@
+import { useNavigate } from "react-router-dom";
+
 function Dashboard() {
+  const navigate = useNavigate();
   return (
     <section className="dashboard">
       <div className="dashboard-header">
@@ -12,10 +15,13 @@ function Dashboard() {
           </p>
         </div>
 
-        <button className="primary-button">
-          + New Decision
-        </button>
-      </div>
+       <button
+       className="primary-button"
+       onClick={() => navigate("/decisions/new")}
+       >  
+       + New Decision
+       </button>
+       </div>
 
       <div className="stats-grid">
         <div className="stat-card">

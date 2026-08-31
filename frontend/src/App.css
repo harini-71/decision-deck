@@ -505,4 +505,127 @@
   .setup-actions button {
     flex: 1;
   }
+  
+}
+/* =========================================
+   Decision Options
+   ========================================= */
+
+.options-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  padding-top: 4px;
+}
+
+.options-heading label {
+  display: block;
+
+  color: #202124;
+
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.options-heading p {
+  margin: 5px 0 0;
+
+  color: #6b6f76;
+
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.option-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.option-row input {
+  flex: 1;
+
+  padding: 12px 14px;
+
+  border: 1px solid #cfd1cf;
+  border-radius: 6px;
+
+  background: #ffffff;
+  color: #202124;
+
+  font-size: 14px;
+
+  outline: none;
+
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.option-row input::placeholder {
+  color: #969997;
+}
+
+.option-row input:focus {
+  border-color: #315c72;
+  box-shadow: 0 0 0 2px rgba(49, 92, 114, 0.08);
+}
+
+.remove-option {
+  padding: 9px 10px;
+
+  border: none;
+  background: transparent;
+
+  color: #777b78;
+
+  font-size: 12px;
+  font-weight: 500;
+
+  cursor: pointer;
+}
+
+.remove-option:hover {
+  color: #9a4b42;
+}
+
+.add-option {
+  align-self: flex-start;
+
+  padding: 0;
+
+  border: none;
+  background: transparent;
+
+  color: #315c72;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  cursor: pointer;
+}
+
+.add-option:hover {
+  color: #274b5e;
+}
+
+
+/* ---------- Options Responsive ---------- */
+
+@media (max-width: 700px) {
+  .option-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .remove-option {
+    align-self: flex-start;
+  }
 }
