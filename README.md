@@ -137,7 +137,6 @@ MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret
 ```
 
-Do **not** commit the `.env` file to GitHub.
 
 ## Project Status
 
