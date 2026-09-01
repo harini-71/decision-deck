@@ -1,3 +1,4 @@
+
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -5,8 +6,13 @@ import { calculateDecisionResults } from "../utils/decisionEngine";
 
 function ResultsPage({ decision }) {
   const navigate = useNavigate();
+
   const [saving, setSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState("");
+
+  const [advisorLoading, setAdvisorLoading] = useState(false);
+  const [advisorInsight, setAdvisorInsight] = useState(null);
+  const [advisorError, setAdvisorError] = useState("");
 
   const results = useMemo(
     () => calculateDecisionResults(decision),
@@ -14,6 +20,59 @@ function ResultsPage({ decision }) {
   );
 
   const winner = results[0];
+
+  async function getAdvisorInsight() {
+    setAdvisorLoading(true);
+    setAdvisorError("");
+    setAdvisorInsight(null);
+
+    try {
+      const rankings = results.map((result) => ({
+        option: result.option,
+        score: result.percentage,
+      }));
+
+      const response = await fetch(
+        "http://localhost:5000/api/advisor",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            decision: {
+              title: decision.title,
+              description: decision.description,
+              options: decision.options,
+              criteria: decision.criteria,
+              result: {
+                winner: winner.option,
+                rankings,
+              },
+            },
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.message || "Failed to get decision insight"
+        );
+      }
+
+      setAdvisorInsight(data.advisor);
+    } catch (error) {
+      console.error("Advisor error:", error);
+
+      setAdvisorError(
+        "Couldn't generate an insight. Please try again."
+      );
+    } finally {
+      setAdvisorLoading(false);
+    }
+  }
 
   async function saveDecision() {
     setSaving(true);
@@ -77,6 +136,7 @@ function ResultsPage({ decision }) {
       }, 800);
     } catch (error) {
       console.error("Save error:", error);
+
       setSaveMessage(
         "Could not save the decision. Please try again."
       );
@@ -89,6 +149,7 @@ function ResultsPage({ decision }) {
     <section className="results-page">
 
       <div className="setup-header">
+
         <p className="eyebrow">
           Decision complete
         </p>
@@ -104,7 +165,9 @@ function ResultsPage({ decision }) {
           Decision:{" "}
           <strong>{decision.title}</strong>
         </p>
+
       </div>
+
 
       {/* Winner */}
 
@@ -123,6 +186,7 @@ function ResultsPage({ decision }) {
 
       </div>
 
+
       {/* Rankings */}
 
       <div className="results-list">
@@ -139,18 +203,22 @@ function ResultsPage({ decision }) {
             </div>
 
             <div className="result-option">
+
               <strong>
                 {result.option}
               </strong>
 
               <div className="result-bar">
+
                 <div
                   className="result-bar-fill"
                   style={{
                     width: `${result.percentage}%`,
                   }}
                 />
+
               </div>
+
             </div>
 
             <div className="result-score">
@@ -163,11 +231,93 @@ function ResultsPage({ decision }) {
 
       </div>
 
+
+      {/* Decision Advisor */}
+
+      <div className="advisor-section">
+
+        <div className="advisor-header">
+
+          <span className="advisor-label">
+            Decision Advisor
+          </span>
+
+          <h2>
+            Want a second perspective?
+          </h2>
+
+          <p>
+            Get a quick analysis of how strong
+            your decision really is.
+          </p>
+
+        </div>
+
+
+        {!advisorInsight && (
+
+          <button
+            type="button"
+            className="primary-button"
+            onClick={getAdvisorInsight}
+            disabled={advisorLoading}
+          >
+            {advisorLoading
+              ? "Analyzing..."
+              : "Get Decision Insight →"}
+          </button>
+
+        )}
+
+
+        {advisorError && (
+
+          <p className="save-message">
+            {advisorError}
+          </p>
+
+        )}
+
+
+        {advisorInsight && (
+
+          <div className="advisor-result">
+
+            <div className="advisor-result-top">
+
+              <span className="advisor-label">
+                {advisorInsight.confidence} decision
+              </span>
+
+              <strong>
+                {advisorInsight.winner}
+              </strong>
+
+            </div>
+
+            <p>
+              {advisorInsight.insight}
+            </p>
+
+          </div>
+
+        )}
+
+      </div>
+
+
+      {/* Save message */}
+
       {saveMessage && (
+
         <p className="save-message">
           {saveMessage}
         </p>
+
       )}
+
+
+      {/* Actions */}
 
       <div className="setup-actions">
 
@@ -197,3 +347,4 @@ function ResultsPage({ decision }) {
 }
 
 export default ResultsPage;
+
