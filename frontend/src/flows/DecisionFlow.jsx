@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import {
   Routes,
@@ -18,41 +17,26 @@ function DecisionFlow() {
 
   const template = location.state?.template;
 
-  const [decision, setDecision] = useState(() => {
-    if (template) {
-      return {
-        title: template.title,
-        description: template.description,
-        options: template.options,
-        criteria: template.criteria.map(
-          (criterion) => ({
-            name: criterion,
-            weight: 5,
-          })
-        ),
-        scores: [],
-      };
-    }
-
-    return {
-      title: "",
-      description: "",
-      options: ["", ""],
-      criteria: [],
-      scores: [],
-    };
-  });
+  const [decision, setDecision] = useState(() => ({
+    title: template?.title || "",
+    description: template?.description || "",
+    options: ["", ""],
+    criteria:
+      template?.criteria?.map((criterion) => ({
+        name: criterion,
+        weight: 5,
+      })) || [],
+    scores: [],
+  }));
 
   return (
     <Routes>
 
-      {/* /decisions */}
       <Route
         index
         element={<DecisionsPage />}
       />
 
-      {/* /decisions/new */}
       <Route
         path="new"
         element={
@@ -63,7 +47,6 @@ function DecisionFlow() {
         }
       />
 
-      {/* /decisions/criteria */}
       <Route
         path="criteria"
         element={
@@ -74,7 +57,6 @@ function DecisionFlow() {
         }
       />
 
-      {/* /decisions/evaluate */}
       <Route
         path="evaluate"
         element={
@@ -85,7 +67,6 @@ function DecisionFlow() {
         }
       />
 
-      {/* /decisions/results */}
       <Route
         path="results"
         element={
@@ -95,10 +76,11 @@ function DecisionFlow() {
         }
       />
 
-      {/* /decisions/:id */}
       <Route
         path=":id"
-        element={<DecisionDetailsPage />}
+        element={
+          <DecisionDetailsPage />
+        }
       />
 
     </Routes>
@@ -106,4 +88,3 @@ function DecisionFlow() {
 }
 
 export default DecisionFlow;
-

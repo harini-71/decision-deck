@@ -1,8 +1,10 @@
-
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 function DecisionSetup({ decision, setDecision }) {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const template = location.state?.template;
 
   function updateOption(index, value) {
     const updatedOptions = [...decision.options];
@@ -39,30 +41,51 @@ function DecisionSetup({ decision, setDecision }) {
 
   return (
     <section className="decision-setup">
-      <div className="setup-header">
-        <p className="eyebrow">New decision</p>
 
-        <h1>What are you deciding?</h1>
+      {/* HEADER */}
+
+      <div className="setup-header">
+
+        <p className="eyebrow">
+          {template?.tag || "New decision"}
+        </p>
+
+        <h1>
+          {template?.setupTitle || "What are you deciding?"}
+        </h1>
 
         <p>
-          Start by giving your decision a clear name and
-          describing the options you're considering.
+          {template?.setupDescription ||
+            "Start by giving your decision a clear name and describing the options you're considering."}
         </p>
+
       </div>
+
 
       <div className="setup-form">
 
-        {/* Decision name */}
+        {/* DECISION NAME */}
 
         <div className="form-field">
+
           <label htmlFor="decision-title">
-            Decision name
+            {template?.id === "purchase"
+              ? "What are you buying?"
+              : template?.id === "path"
+              ? "What decision are you facing?"
+              : "Decision name"}
           </label>
 
           <input
             id="decision-title"
             type="text"
-            placeholder="e.g. Which laptop should I buy?"
+            placeholder={
+              template?.id === "purchase"
+                ? "e.g. Which laptop should I buy?"
+                : template?.id === "path"
+                ? "e.g. Which career path should I choose?"
+                : "e.g. Which laptop should I buy?"
+            }
             value={decision.title}
             onChange={(event) =>
               setDecision({
@@ -71,18 +94,27 @@ function DecisionSetup({ decision, setDecision }) {
               })
             }
           />
+
         </div>
 
-        {/* Description */}
+
+        {/* DESCRIPTION */}
 
         <div className="form-field">
+
           <label htmlFor="decision-description">
-            Description
+            Tell us a little more
           </label>
 
           <textarea
             id="decision-description"
-            placeholder="Briefly describe what you're trying to decide..."
+            placeholder={
+              template?.id === "purchase"
+                ? "What are you looking for and what matters most?"
+                : template?.id === "path"
+                ? "What are you hoping to achieve with this decision?"
+                : "Briefly describe what you're trying to decide..."
+            }
             value={decision.description}
             onChange={(event) =>
               setDecision({
@@ -92,30 +124,51 @@ function DecisionSetup({ decision, setDecision }) {
             }
             rows="5"
           />
+
         </div>
 
-        {/* Options */}
+
+        {/* OPTIONS */}
 
         <div className="options-section">
+
           <div className="options-heading">
+
             <div>
-              <label>Options</label>
+
+              <label>
+                {template?.optionLabel || "Options"}
+              </label>
 
               <p>
-                Add at least two options you're considering.
+                {template?.optionDescription ||
+                  "Add at least two options you're considering."}
               </p>
+
             </div>
+
           </div>
 
+
           <div className="options-list">
+
             {decision.options.map((option, index) => (
+
               <div
                 className="option-row"
                 key={index}
               >
+
+                <span className="option-number">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+
                 <input
                   type="text"
-                  placeholder={`Option ${index + 1}`}
+                 placeholder={
+  template?.optionPlaceholders?.[index] ||
+  `Option ${index + 1}`
+}
                   value={option}
                   onChange={(event) =>
                     updateOption(
@@ -136,9 +189,13 @@ function DecisionSetup({ decision, setDecision }) {
                     Remove
                   </button>
                 )}
+
               </div>
+
             ))}
+
           </div>
+
 
           <button
             type="button"
@@ -147,19 +204,73 @@ function DecisionSetup({ decision, setDecision }) {
           >
             + Add another option
           </button>
+
         </div>
 
-        {/* Actions */}
+
+        {/* FRAMEWORK PREVIEW */}
+
+        {template && (
+          <div className="template-preview">
+
+            <div className="preview-heading">
+
+              <span className="preview-label">
+                YOUR FRAMEWORK
+              </span>
+
+              <strong>
+                {template.title}
+              </strong>
+
+            </div>
+
+
+            <div className="preview-steps">
+
+              {template.steps.map((step, index) => (
+
+                <div
+                  className="preview-step"
+                  key={step}
+                >
+
+                  <span className="preview-number">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+
+                  <span className="preview-name">
+                    {step}
+                  </span>
+
+                  {index < template.steps.length - 1 && (
+                    <span className="preview-arrow">
+                      →
+                    </span>
+                  )}
+
+                </div>
+
+              ))}
+
+            </div>
+
+          </div>
+        )}
+
+
+        {/* ACTIONS */}
 
         <div className="setup-actions">
 
           <button
             type="button"
             className="secondary-button"
-            onClick={() => navigate("/decisions")}
+            onClick={() => navigate("/templates")}
           >
-            Cancel
+            Back
           </button>
+
 
           <button
             type="button"
@@ -171,15 +282,20 @@ function DecisionSetup({ decision, setDecision }) {
               )
             }
             onClick={() =>
-              navigate("/decisions/criteria")
+              navigate("/decisions/criteria", {
+                state: {
+                  template,
+                },
+              })
             }
           >
-            Continue
+            Continue →
           </button>
 
         </div>
 
       </div>
+
     </section>
   );
 }

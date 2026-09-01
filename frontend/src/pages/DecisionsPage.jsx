@@ -7,6 +7,35 @@ function DecisionsPage() {
 
   const [decisions, setDecisions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  async function fetchDecisions() {
+    try {
+      setLoading(true);
+      setError("");
+
+      const response = await fetch(
+        "http://localhost:5000/api/decisions"
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.message || "Failed to load decisions"
+        );
+      }
+
+      setDecisions(data.decisions || []);
+    } catch (error) {
+      console.error("Failed to fetch decisions:", error);
+      setError(
+        "Could not load your decisions. Make sure the backend is running."
+      );
+    } finally {
+      setLoading(false);
+    }
+  }
 
   async function deleteDecision(id) {
     const confirmed = window.confirm(
@@ -45,35 +74,37 @@ function DecisionsPage() {
   }
 
   useEffect(() => {
-    async function fetchDecisions() {
-      try {
-        const response = await fetch(
-          "http://localhost:5000/api/decisions"
-        );
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(
-            data.message || "Failed to load decisions"
-          );
-        }
-
-        setDecisions(data.decisions);
-      } catch (error) {
-        console.error("Failed to fetch decisions:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
     fetchDecisions();
   }, []);
 
   if (loading) {
     return (
       <section className="decisions-page">
-        <p>Loading decisions...</p>
+        <div className="setup-header">
+          <p className="eyebrow">Decisions</p>
+          <h1>My Decisions</h1>
+          <p>Loading your saved decisions...</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="decisions-page">
+        <div className="setup-header">
+          <p className="eyebrow">Decisions</p>
+          <h1>My Decisions</h1>
+          <p>{error}</p>
+
+          <button
+            type="button"
+            className="primary-button"
+            onClick={fetchDecisions}
+          >
+            Try again
+          </button>
+        </div>
       </section>
     );
   }
@@ -93,7 +124,25 @@ function DecisionsPage() {
       </div>
 
       {decisions.length === 0 ? (
-        <p>No decisions saved yet.</p>
+        <div className="criteria-empty">
+          <p>No decisions saved yet.</p>
+
+          <span>
+            Complete a decision and save the results to see
+            it here.
+          </span>
+
+          <br />
+
+          <button
+            type="button"
+            className="primary-button"
+            onClick={() => navigate("/decisions/new")}
+            style={{ marginTop: "18px" }}
+          >
+            Start a decision
+          </button>
+        </div>
       ) : (
         <div className="decisions-list">
 
@@ -103,7 +152,8 @@ function DecisionsPage() {
               key={decision._id}
             >
 
-              <div>
+              <div className="decision-card-content">
+
                 <span className="decision-status">
                   {decision.status === "completed"
                     ? "Completed"
@@ -126,10 +176,13 @@ function DecisionsPage() {
                 )}
 
                 <small>
-                  {new Date(
-                    decision.createdAt
-                  ).toLocaleDateString()}
+                  {decision.createdAt
+                    ? new Date(
+                        decision.createdAt
+                      ).toLocaleDateString()
+                    : ""}
                 </small>
+
               </div>
 
               <div className="decision-actions">

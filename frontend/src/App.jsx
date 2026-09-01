@@ -2,6 +2,7 @@
 import "./App.css";
 import Navbar from "./components/Navbar";
 import DecisionFlow from "./flows/DecisionFlow";
+import LoginPage from "./pages/LoginPage";
 
 import {
   BrowserRouter,
@@ -38,6 +39,7 @@ function App() {
             path="/templates"
             element={<TemplatesPage />}
           />
+          <Route path="/login" element={<LoginPage />} />
 
         </Routes>
       </main>

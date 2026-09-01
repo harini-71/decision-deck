@@ -14,9 +14,15 @@ function Navbar() {
         <Link to="/decisions">My Decisions</Link>
         <Link to="/templates">Templates</Link>
       </nav>
-
+      
       <div className="navbar-user">
         <span className="user-name">Guest</span>
+      </div>
+
+      <div className="navbar-user">
+        <Link to="/login" className="login-link">
+          Log in
+        </Link>
       </div>
     </header>
   );
